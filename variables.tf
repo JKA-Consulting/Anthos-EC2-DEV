@@ -5,7 +5,3 @@ variable "aws_region" {
 variable "instance_type" {
   description = "Type of the instance"
 }
-
-variable "key_name" {
-  description = "Name of the SSH key pair"
-}

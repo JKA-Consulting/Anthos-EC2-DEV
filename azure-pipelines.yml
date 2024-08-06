@@ -26,11 +26,10 @@ stages:
       inputs:
         provider: 'aws'
         command: 'plan'
-        commandOptions: '-out=tfplan'
         environmentServiceNameAWS: 'AWS terraform'
     - task: TerraformTaskV4@4
       inputs:
         provider: 'aws'
         command: 'apply'
-        commandOptions: 'tfplan -auto-approve'
+        commandOptions: '-auto-approve'
         environmentServiceNameAWS: 'AWS terraform'

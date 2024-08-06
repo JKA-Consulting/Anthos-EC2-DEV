@@ -19,7 +19,6 @@ stages:
       inputs:
         provider: 'aws'
         command: 'init'
-        commandOptions: '-'
         backendServiceAWS: 'AWS terraform'
         backendAWSBucketName: 'terraform-4202'
         backendAWSKey: 'terraform-4202/state.tfstate'

@@ -1,18 +1,37 @@
 trigger: 
-- test
+- none
 
 pool: 
   vmImage: "ubuntu-latest"
 
-steps:
-  - script: |
-      curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-      sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-      sudo apt-get update && sudo apt-get install terraform
-
-    displayName: 'Install Terraform'
-
-  - script: |
-      terraform init
-
-    displayName: 'Initializing terraform'
+stages:
+- stage: init_stage
+  displayName: terraform stage
+  jobs: 
+  - job: deploy_job
+    displayName: terraform job
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+    - task: TerraformTaskV4@4
+      displayName: terraform init
+      inputs:
+        provider: 'aws'
+        command: 'init'
+        commandOptions: '-'
+        backendServiceAWS: 'AWS terraform'
+        backendAWSBucketName: 'terraform-4202'
+        backendAWSKey: 'terraform-4202/state.tfstate'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'aws'
+        command: 'plan'
+        commandOptions: '-out=tfplan'
+        environmentServiceNameAWS: 'AWS terraform'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'aws'
+        command: 'apply'
+        commandOptions: 'tfplan -auto-approve'
+        environmentServiceNameAWS: 'AWS terraform'
